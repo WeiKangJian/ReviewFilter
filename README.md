@@ -9,5 +9,5 @@
 
 关键机器学习算法——基于VSM+SVM的模型训练和分类
 ---------------------------
-![Image text](https://raw.github.com/yourName/repositpry/master/yourprojectName/img-folder/test.jpg)
+![Image text](https://raw.githubusercontent.com/wkj6622531/ReviewFilter/master/img-folder/MainProcess.png)
 
