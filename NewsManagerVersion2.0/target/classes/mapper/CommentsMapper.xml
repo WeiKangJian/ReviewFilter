@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovo.dao.CommentsMapper">
+  <resultMap id="BaseResultMap" type="com.ovo.bean.Comments">
+    <id column="comments_ID" jdbcType="INTEGER" property="commentsId" />
+    <result column="news_ID" jdbcType="CHAR" property="newsId" />
+    <result column="users_ID" jdbcType="CHAR" property="usersId" />
+    <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
+    <result column="comment_content" jdbcType="VARCHAR" property="commentContent" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="comment_type" jdbcType="VARCHAR" property="commentType" />
+  </resultMap>
+  <resultMap id="daResultMap" type="com.ovo.bean.Comments_name">
+    <id column="comments_ID" jdbcType="INTEGER" property="commentsId" />
+    <result column="news_ID" jdbcType="CHAR" property="newsId" />
+    <result column="users_ID" jdbcType="CHAR" property="usersId" />
+    <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
+    <result column="comment_content" jdbcType="VARCHAR" property="commentContent" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="comment_type" jdbcType="VARCHAR" property="commentType" />
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    comments_ID, news_ID, users_ID, comment_time,comment_content, likes,comment_type
+  </sql>
+  <select id="selectByExample" parameterType="com.ovo.bean.CommentsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from comments
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="getall"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from comments order by comment_time
+  </select>
+  <select id="selectByuserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from comments
+    where users_ID = #{usersId,jdbcType=CHAR} order by comment_time
+  </select>
+  <select id="selectBynewsId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from comments
+    where news_ID = #{newsId,jdbcType=CHAR} and comment_type = "已审核" order by comment_time
+  </select>
+  <select id="selectBycommentsId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from comments
+    where comments_ID = #{commentsId,jdbcType=INTEGER} and comment_type = "已审核"
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from comments
+    where comments_ID = #{commentsId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByNewsId" parameterType="java.lang.String">
+    delete from comments
+    where news_ID = #{newsId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ovo.bean.CommentsExample">
+    delete from comments
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ovo.bean.Comments">
+    insert into comments (comments_ID, news_ID, users_ID,
+      comment_time, likes, comment_content,
+      picture)
+    values (#{commentsId,jdbcType=CHAR}, #{newsId,jdbcType=CHAR}, #{usersId,jdbcType=CHAR},
+      #{commentTime,jdbcType=TIMESTAMP}, #{likes,jdbcType=INTEGER}, #{commentContent,jdbcType=LONGVARCHAR},
+      #{picture,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ovo.bean.Comments">
+    insert into comments
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commentsId != null">
+        comments_ID,
+      </if>
+      <if test="newsId != null">
+        news_ID,
+      </if>
+      <if test="usersId != null">
+        users_ID,
+      </if>
+      <if test="commentTime != null">
+        comment_time,
+      </if>
+      <if test="commentContent != null">
+        comment_content,
+      </if>
+      <if test="likes != null">
+        likes,
+      </if>
+      <if test="commentType != null">
+        comment_type
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commentsId != null">
+        #{commentsId,jdbcType=INTEGER},
+      </if>
+      <if test="newsId != null">
+        #{newsId,jdbcType=CHAR},
+      </if>
+      <if test="usersId != null">
+        #{usersId,jdbcType=CHAR},
+      </if>
+      <if test="commentTime != null">
+        #{commentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commentContent != null">
+        #{commentContent,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        #{likes,jdbcType=INTEGER},
+      </if>
+       <if test="commentType != null">
+        #{commentType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ovo.bean.CommentsExample" resultType="java.lang.Long">
+    select count(*) from comments
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update comments
+    <set>
+      <if test="record.commentsId != null">
+        comments_ID = #{record.commentsId,jdbcType=CHAR},
+      </if>
+      <if test="record.newsId != null">
+        news_ID = #{record.newsId,jdbcType=CHAR},
+      </if>
+      <if test="record.usersId != null">
+        users_ID = #{record.usersId,jdbcType=CHAR},
+      </if>
+      <if test="record.commentTime != null">
+        comment_time = #{record.commentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.likes != null">
+        likes = #{record.likes,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentContent != null">
+        comment_content = #{record.commentContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.picture != null">
+        picture = #{record.picture,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update comments
+    set comments_ID = #{record.commentsId,jdbcType=CHAR},
+      news_ID = #{record.newsId,jdbcType=CHAR},
+      users_ID = #{record.usersId,jdbcType=CHAR},
+      comment_time = #{record.commentTime,jdbcType=TIMESTAMP},
+      likes = #{record.likes,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovo.bean.Comments">
+    update comments
+    <set>
+      <if test="newsId != null">
+        news_ID = #{newsId,jdbcType=CHAR},
+      </if>
+      <if test="usersId != null">
+        users_ID = #{usersId,jdbcType=CHAR},
+      </if>
+      <if test="commentTime != null">
+        comment_time = #{commentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="likes != null">
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="commentContent != null">
+        comment_content = #{commentContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where comments_ID = #{commentsId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ovo.bean.Comments">
+    update comments
+    set news_ID = #{newsId,jdbcType=CHAR},
+      users_ID = #{usersId,jdbcType=CHAR},
+      comment_time = #{commentTime,jdbcType=TIMESTAMP},
+      likes = #{likes,jdbcType=INTEGER},
+      comment_content = #{commentContent,jdbcType=LONGVARCHAR},
+      picture = #{picture,jdbcType=LONGVARBINARY}
+    where comments_ID = #{commentsId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ovo.bean.Comments">
+    update comments
+    set news_ID = #{newsId,jdbcType=CHAR},
+      users_ID = #{usersId,jdbcType=CHAR},
+      comment_time = #{commentTime,jdbcType=TIMESTAMP},
+      likes = #{likes,jdbcType=INTEGER}
+    where comments_ID = #{commentsId,jdbcType=CHAR}
+  </update>
+</mapper>

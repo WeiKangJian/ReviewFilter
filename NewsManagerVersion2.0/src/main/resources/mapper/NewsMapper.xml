@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovo.dao.NewsMapper">
+  <resultMap id="BaseResultMap" type="com.ovo.bean.News">
+    <id column="news_ID" jdbcType="CHAR" property="newsId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="realse_time" jdbcType="TIMESTAMP" property="realseTime" />
+    <result column="news_type" jdbcType="INTEGER" property="newsType" />
+    <result column="news_content" jdbcType="VARCHAR" property="newsContent" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="collecton_num" jdbcType="INTEGER" property="collectonNum" />
+    <result column="sharing_num" jdbcType="INTEGER" property="sharingNum" />
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    news_ID, title, realse_time, news_type, news_content, likes, collecton_num, sharing_num, 
+    comment_num
+  </sql>
+  <select id="selectByExample" parameterType="com.ovo.bean.NewsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from news
+    where news_ID = #{newsId,jdbcType=CHAR}
+  </select>
+  <select id="gettitleBynewsId" parameterType="java.lang.String" resultType="String">
+    select title
+    from news
+    where news_ID = #{newsId,jdbcType=CHAR}
+  </select>
+  <select id="selectByrealseTime" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from news order by realse_time
+  </select>
+  <select id="selectBynewsType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from news
+    where news_type = #{newsType,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from news
+    where news_ID = #{newsId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ovo.bean.NewsExample">
+    delete from news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ovo.bean.News">
+    insert into news (news_ID, title, realse_time, 
+      news_type, news_content, likes, 
+      collecton_num, sharing_num, comment_num
+      )
+    values (#{newsId,jdbcType=CHAR}, #{title,jdbcType=VARCHAR}, #{realseTime,jdbcType=TIMESTAMP}, 
+      #{newsType,jdbcType=INTEGER}, #{newsContent,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER}, 
+      #{collectonNum,jdbcType=INTEGER}, #{sharingNum,jdbcType=INTEGER}, #{commentNum,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ovo.bean.News">
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="newsId != null">
+        news_ID,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="realseTime != null">
+        realse_time,
+      </if>
+      <if test="newsType != null">
+        news_type,
+      </if>
+      <if test="newsContent != null">
+        news_content,
+      </if>
+      <if test="likes != null">
+        likes,
+      </if>
+      <if test="collectonNum != null">
+        collecton_num,
+      </if>
+      <if test="sharingNum != null">
+        sharing_num,
+      </if>
+      <if test="commentNum != null">
+        comment_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="newsId != null">
+        #{newsId,jdbcType=CHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="realseTime != null">
+        #{realseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsType != null">
+        #{newsType,jdbcType=INTEGER},
+      </if>
+      <if test="newsContent != null">
+        #{newsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="collectonNum != null">
+        #{collectonNum,jdbcType=INTEGER},
+      </if>
+      <if test="sharingNum != null">
+        #{sharingNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null">
+        #{commentNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ovo.bean.NewsExample" resultType="java.lang.Long">
+    select count(*) from news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update news
+    <set>
+      <if test="record.newsId != null">
+        news_ID = #{record.newsId,jdbcType=CHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realseTime != null">
+        realse_time = #{record.realseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.newsType != null">
+        news_type = #{record.newsType,jdbcType=INTEGER},
+      </if>
+      <if test="record.newsContent != null">
+        news_content = #{record.newsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.likes != null">
+        likes = #{record.likes,jdbcType=INTEGER},
+      </if>
+      <if test="record.collectonNum != null">
+        collecton_num = #{record.collectonNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.sharingNum != null">
+        sharing_num = #{record.sharingNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentNum != null">
+        comment_num = #{record.commentNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update news
+    set news_ID = #{record.newsId,jdbcType=CHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      realse_time = #{record.realseTime,jdbcType=TIMESTAMP},
+      news_type = #{record.newsType,jdbcType=INTEGER},
+      news_content = #{record.newsContent,jdbcType=VARCHAR},
+      likes = #{record.likes,jdbcType=INTEGER},
+      collecton_num = #{record.collectonNum,jdbcType=INTEGER},
+      sharing_num = #{record.sharingNum,jdbcType=INTEGER},
+      comment_num = #{record.commentNum,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovo.bean.News">
+    update news
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="realseTime != null">
+        realse_time = #{realseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newsType != null">
+        news_type = #{newsType,jdbcType=INTEGER},
+      </if>
+      <if test="newsContent != null">
+        news_content = #{newsContent,jdbcType=VARCHAR},
+      </if>
+      <if test="likes != null">
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="collectonNum != null">
+        collecton_num = #{collectonNum,jdbcType=INTEGER},
+      </if>
+      <if test="sharingNum != null">
+        sharing_num = #{sharingNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null">
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where news_ID = #{newsId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ovo.bean.News">
+    update news
+    set title = #{title,jdbcType=VARCHAR},
+      realse_time = #{realseTime,jdbcType=TIMESTAMP},
+      news_type = #{newsType,jdbcType=INTEGER},
+      news_content = #{newsContent,jdbcType=VARCHAR},
+      likes = #{likes,jdbcType=INTEGER},
+      collecton_num = #{collectonNum,jdbcType=INTEGER},
+      sharing_num = #{sharingNum,jdbcType=INTEGER},
+      comment_num = #{commentNum,jdbcType=INTEGER}
+    where news_ID = #{newsId,jdbcType=CHAR}
+  </update>
+</mapper>

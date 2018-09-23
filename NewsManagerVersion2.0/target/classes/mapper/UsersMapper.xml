@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ovo.dao.UsersMapper">
+  <resultMap id="BaseResultMap" type="com.ovo.bean.Users">
+    <id column="users_ID" jdbcType="CHAR" property="usersId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone_number" jdbcType="CHAR" property="phoneNumber" />
+    <result column="E_mail" jdbcType="VARCHAR" property="eMail" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+  </resultMap>
+  <!--登录-->
+<select id="login" resultMap="BaseResultMap" parameterType="String">
+  select users_ID, password from users
+  WHERE  users_ID = #{arg0} AND password= #{arg1}
+</select>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    users_ID, name, password, phone_number, E_mail, sex
+  </sql>
+  <select id="selectByExample" parameterType="com.ovo.bean.UsersExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from users
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where users_ID = #{usersId,jdbcType=CHAR}
+  </select>
+  <select id="getallusers" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from users
+  </select>
+  <select id="getnameByusersId" parameterType="java.lang.String" resultType="String">
+    select name
+    from users
+    where users_ID = #{usersId,jdbcType=CHAR}
+  </select>
+  <select id="selectByname" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from users
+    where users_ID = #{usersId,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ovo.bean.UsersExample">
+    delete from users
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ovo.bean.Users">
+    insert into users (users_ID, name, password, 
+      phone_number, E_mail, sex
+      )
+    values (#{usersId,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},
+        #{phoneNumber,jdbcType=CHAR},#{eMail,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ovo.bean.Users">
+    insert into users
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="usersId != null">
+        users_ID,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="phoneNumber != null">
+        phone_number,
+      </if>
+      <if test="eMail != null">
+        E_mail,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="usersId != null">
+        #{usersId,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="eMail != null">
+        #{eMail,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ovo.bean.UsersExample" resultType="java.lang.Long">
+    select count(*) from users
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update users
+    <set>
+      <if test="record.usersId != null">
+        users_ID = #{record.usersId,jdbcType=CHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneNumber != null">
+        phone_number = #{record.phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="record.eMail != null">
+        E_mail = #{record.eMail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null">
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update users
+    set users_ID = #{record.usersId,jdbcType=CHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      phone_number = #{record.phoneNumber,jdbcType=CHAR},
+      E_mail = #{record.eMail,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ovo.bean.Users">
+    update users
+    <set>
+      <if test="name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        phone_number = #{record.phoneNumber,jdbcType=CHAR},
+      </if>
+      <if test="eMail != null">
+        E_mail = #{record.eMail,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where users_ID = #{record.usersId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ovo.bean.Users">
+    update users
+    set name = #{record.name,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      phone_number = #{record.phoneNumber,jdbcType=CHAR},
+      E_mail = #{record.eMail,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR}
+    where users_ID = #{record.usersId,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey1" parameterType="com.ovo.bean.Users">
+    update users
+    set name = #{record.name,jdbcType=VARCHAR},
+      phone_number = #{record.phoneNumber,jdbcType=CHAR},
+      E_mail = #{record.eMail,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=VARCHAR}
+    where users_ID = #{record.usersId,jdbcType=CHAR}
+  </update>
+</mapper>

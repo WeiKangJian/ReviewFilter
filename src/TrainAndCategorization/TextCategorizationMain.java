@@ -96,6 +96,6 @@ public class TextCategorizationMain  {
 }
 	public static void main(String args[]) throws IOException{
 		TextCategorizationMain text =new TextCategorizationMain();
-		System.out.println(text.predict("感觉还是出了一些问题"));
+		System.out.println(text.predict("独台，分裂 "));
 	}
 }
